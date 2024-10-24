@@ -158,6 +158,13 @@
 </head>
 
 <body>
+    <form action="{{ route('logout') }}" method="POST" style="text-align: right;">
+        @csrf
+        <button type="submit" style="background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            Logout
+        </button>
+    </form>
+    
     <h1>Upload Foto</h1>
     <form action="/upload" class="dropzone" id="photo-dropzone" method="POST" enctype="multipart/form-data">
         @csrf
@@ -287,3 +294,4 @@
 </body>
 
 </html>
+ 

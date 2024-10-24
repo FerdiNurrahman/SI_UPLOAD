@@ -11,33 +11,37 @@ class PhotoController extends Controller
     // Method untuk menampilkan halaman beranda
     public function index()
     {
-        $photos = Photo::all();  // Mengambil semua foto dari database
+        $account_id = auth()->id();
+        $photos = Photo::where('account_id', $account_id)->get(); // Tampilkan foto milik akun yang sedang login
         return view('welcome', compact('photos'));
     }
+    
+
 
     // Method untuk menyimpan foto yang diupload
     public function store(Request $request)
-    {
-        $request->validate([
-            'file.*' => 'required|image|mimes:jpeg,png,jpg,gif',  // Validasi setiap file gambar
+{
+    $request->validate([
+        'file.*' => 'required|image|mimes:jpeg,png,jpg,gif',
+    ]);
+
+    $files = $request->file('file');
+    $photoCount = Photo::count();
+
+    foreach ($files as $index => $file) {
+        $imageName = 'foto_' . ($photoCount + $index + 1) . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('foto'), $imageName);
+
+        // Simpan nama foto dan ID akun ke database
+        Photo::create([
+            'name' => $imageName,
+            'account_id' => auth()->id(), // Menyimpan ID pengguna yang sedang login
         ]);
-
-        $files = $request->file('file');
-        $photoCount = Photo::count(); // Hitung jumlah foto yang ada saat ini di database
-
-        foreach ($files as $index => $file) {
-            // Buat nama baru berdasarkan urutan
-            $imageName = 'foto_' . ($photoCount + $index + 1) . '.' . $file->getClientOriginalExtension();
-            
-            // Pindahkan file ke folder public/foto
-            $file->move(public_path('foto'), $imageName);
-
-            // Simpan nama foto ke database
-            Photo::create(['name' => $imageName]);
-        }
-
-        return response()->json(['success' => 'Foto berhasil di-upload']);
     }
+
+    return response()->json(['success' => 'Foto berhasil di-upload']);
+}
+
 
     // Method untuk menghapus foto
     public function destroy($id)

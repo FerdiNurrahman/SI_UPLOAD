@@ -9,5 +9,12 @@ class Photo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    // Field yang bisa diisi secara massal
+    protected $fillable = ['name', 'account_id'];
+
+    // Relasi ke model Account
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'account_id');
+    }
 }

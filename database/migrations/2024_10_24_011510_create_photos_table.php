@@ -10,14 +10,20 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::create('photos', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');  // Untuk menyimpan nama file foto
-        $table->timestamps();
-    });
-}
-
+    {
+        Schema::create('photos', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');  // Nama file foto
+            $table->unsignedBigInteger('account_id'); // Menyimpan ID akun yang mengupload
+            $table->timestamps();
+            
+            // Tambahkan foreign key dengan nama tabel yang benar
+            $table->foreign('account_id')
+                ->references('id')
+                ->on('accounts')
+                ->onDelete('cascade');
+        });
+    }
 
     /**
      * Reverse the migrations.
