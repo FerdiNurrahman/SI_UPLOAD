@@ -14,12 +14,12 @@ class CreateAccountsTable extends Migration
     public function up()
     {
         Schema::create('accounts', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('username')->unique(); // Username harus unik
-            $table->string('email')->unique(); // Email harus unik
-            $table->string('name'); // Nama pengguna
-            $table->string('password'); // Password terenkripsi
-            $table->timestamps(); // Menyimpan waktu created_at dan updated_at
+            $table->id(); // Primary key auto increment
+            $table->string('username')->unique(); // Username with unique constraint
+            $table->string('email')->unique(); // Email with unique constraint
+            $table->string('name'); // Name of the user
+            $table->string('password'); // Encrypted password
+            $table->timestamps(); // Created_at and updated_at columns
         });
     }
 

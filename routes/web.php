@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\login;
+use App\Http\Controllers\coba;
 use App\Http\model\Accounts;
+
+Route::get('/', [coba::class, 'index']);
+
 
 Route::get('/login', [Login::class, 'index'])->name('login');
 Route::post('/login', [Login::class, 'authenticate']);

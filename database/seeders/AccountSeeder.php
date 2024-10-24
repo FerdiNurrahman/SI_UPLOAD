@@ -19,14 +19,14 @@ class AccountSeeder extends Seeder
             [
                 'username' => 'ferdi',
                 'email' => 'ferdi@gmail.com',
-                'name' => 'User One',
+                'name' => 'Ferdi Nurrahman',
                 'password' => Hash::make('ferdi123'), // Password terenkripsi
             ],
             [
-                'username' => 'user2',
-                'email' => 'user2@example.com',
-                'name' => 'User Two',
-                'password' => Hash::make('password456'), // Password terenkripsi
+                'username' => 'Alifa',
+                'email' => 'alifa@gmail.com',
+                'name' => 'Alifa Nur Nabila',
+                'password' => Hash::make('alifa123'), // Password terenkripsi
             ],
         ]);
     }
