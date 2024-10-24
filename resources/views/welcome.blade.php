@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Upload Foto</title>
+
+    <!-- CSS Eksternal -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- JavaScript Eksternal -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            padding: 20px; 
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
             background-color: #f0f0f0;
         }
 
-        .dropzone { 
-            margin-bottom: 20px; 
-            border: 2px dashed #0087F7; 
-            padding: 30px; 
-            background-color: #f9f9f9; 
+        .dropzone {
+            margin-bottom: 20px;
+            border: 2px dashed #0087F7;
+            padding: 30px;
+            background-color: #f9f9f9;
             border-radius: 10px;
         }
 
@@ -83,7 +91,6 @@
             display: block;
         }
 
-       /* Modal Preview */
         .modal {
             display: none;
             position: fixed;
@@ -92,7 +99,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Background dengan transparansi */
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
         .modal-content {
@@ -102,14 +109,14 @@
             transform: translate(-50%, -50%);
             width: 90%;
             height: 90%;
-            max-width: 1000px; /* Batas maksimal ukuran gambar */
+            max-width: 1000px;
             max-height: 100%;
         }
 
         .modal-content img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Gambar akan menyesuaikan tanpa terpotong */
+            object-fit: contain;
         }
 
         .modal-close {
@@ -122,7 +129,6 @@
             cursor: pointer;
         }
 
-        /* Tombol download dan hapus di modal */
         .modal-btn-container {
             position: absolute;
             bottom: 20px;
@@ -131,7 +137,6 @@
             display: flex;
             gap: 10px;
         }
-
 
         .modal-btn-container a,
         .modal-btn-container button {
@@ -151,26 +156,26 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Upload Foto</h1>
     <form action="/upload" class="dropzone" id="photo-dropzone" method="POST" enctype="multipart/form-data">
         @csrf
-    </form>    
+    </form>
 
     <h2>Foto yang diupload</h2>
     <div class="gallery">
         @foreach ($photos as $photo)
-            <div class="image-card" ondblclick="openModal('{{ asset('foto/' . $photo->name) }}', '{{ $photo->id }}')">
-                <img src="{{ asset('foto/' . $photo->name) }}" alt="foto">
-                <div class="btn-container">
-                    <a href="{{ asset('foto/' . $photo->name) }}" download="{{ $photo->name }}">Download</a>
-                    <button onclick="deletePhoto('{{ $photo->id }}')">Hapus</button>
-                </div>
+        <div class="image-card" ondblclick="openModal('{{ asset('foto/' . $photo->name) }}', '{{ $photo->id }}')">
+            <img src="{{ asset('foto/' . $photo->name) }}" alt="foto">
+            <div class="btn-container">
+                <a href="{{ asset('foto/' . $photo->name) }}" download="{{ $photo->name }}">Download</a>
+                <button onclick="deletePhoto('{{ $photo->id }}')">Hapus</button>
             </div>
+        </div>
         @endforeach
     </div>
 
-    <!-- Modal untuk preview besar -->
     <div id="photo-modal" class="modal">
         <span class="modal-close" onclick="closeModal()">&times;</span>
         <div class="modal-content">
@@ -182,8 +187,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         function showSuccessMessage(message) {
             Swal.fire({
@@ -228,30 +231,48 @@
         };
 
         function deletePhoto(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus foto ini?')) {
-                $.ajax({
-                    url: '/delete/' + id,
-                    type: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.success,
-                            confirmButtonText: 'Oke',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                        }).then(() => {
-                            location.reload();
-                        });
-                    }
-                });
-            }
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Anda tidak akan bisa mengembalikan foto ini!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/delete/' + id,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: 'Foto telah dihapus.',
+                                confirmButtonText: 'Oke',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: 'Terjadi kesalahan saat menghapus foto.',
+                                confirmButtonText: 'Oke'
+                            });
+                        }
+                    });
+                }
+            });
         }
 
-        // Fungsi untuk membuka modal dengan preview besar
         function openModal(imageSrc, photoId) {
             document.getElementById('modal-image').src = imageSrc;
             document.getElementById('modal-download').href = imageSrc;
@@ -259,10 +280,10 @@
             document.getElementById('photo-modal').style.display = 'block';
         }
 
-        // Fungsi untuk menutup modal
         function closeModal() {
             document.getElementById('photo-modal').style.display = 'none';
         }
     </script>
 </body>
+
 </html>
