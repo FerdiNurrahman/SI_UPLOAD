@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Upload Foto</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -41,11 +43,9 @@
         .image-card img {
             width: 100%;
             height: 100%;
-            object-fit: contain;  /* Gambar tidak akan terpotong */
-            transition: transform 0.3s ease;
+            object-fit: contain;
             background-color: #f0f0f0; /* Tambahkan background jika ukuran gambar tidak penuh */
         }
-
 
         .image-card:hover {
             transform: scale(1.05);
@@ -56,7 +56,6 @@
             transform: scale(1.1);
         }
 
-        /* Tombol download dan hapus yang muncul saat gambar di-hover */
         .btn-container {
             position: absolute;
             bottom: 15px;
@@ -84,11 +83,9 @@
             background-color: rgba(0, 123, 255, 1);
         }
 
-        /* Saat gambar di-hover, tombol akan muncul */
         .image-card:hover .btn-container {
             display: block;
         }
-
     </style>
 </head>
 <body>
@@ -113,32 +110,78 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        Dropzone.options.photoDropzone = {
-            paramName: "file", // Nama parameter yang diterima server
-            acceptedFiles: ".jpeg,.jpg,.png,.gif", // Hanya file gambar yang diizinkan
-            uploadMultiple: true, // Mengizinkan upload beberapa file sekaligus
-            parallelUploads: 10, // Jumlah file yang di-upload dalam sekali waktu (atur sesuai kebutuhan)
-            maxFilesize: 20, // Batas ukuran file (dalam MB)
-            success: function (file, response) {
-                location.reload(); // Refresh halaman setelah upload berhasil
-            }
-        };
+        // Fungsi untuk menampilkan pesan sukses dengan SweetAlert2
+       // Fungsi untuk menampilkan pesan sukses dengan SweetAlert2
+        function showSuccessMessage(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: message,
+                confirmButtonText: 'Oke',
+                allowOutsideClick: false, // Mencegah klik di luar pesan untuk menutup
+                allowEscapeKey: false,    // Mencegah penutupan pesan dengan tombol Escape
+            });
+        }
 
-        function deletePhoto(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus foto ini?')) {
-                $.ajax({
-                    url: '/delete/' + id,
-                    type: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        alert(response.success);
-                        location.reload();
-                    }
+
+        // Fungsi untuk menampilkan pesan gagal dengan SweetAlert2
+        function showErrorMessage(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: message,
+                confirmButtonText: 'Oke',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
+
+        Dropzone.options.photoDropzone = {
+    paramName: "file", // Nama parameter yang diterima server
+    acceptedFiles: ".jpeg,.jpg,.png,.gif", // Hanya file gambar yang diizinkan
+    uploadMultiple: true, // Mengizinkan upload beberapa file sekaligus
+    parallelUploads: 10, // Jumlah file yang di-upload dalam sekali waktu (atur sesuai kebutuhan)
+    maxFilesize: 20, // Batas ukuran file (dalam MB)
+    success: function (file, response) {
+        // Tampilkan pesan sukses terlebih dahulu
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Foto berhasil di-upload!',
+            confirmButtonText: 'Oke',
+            allowOutsideClick: false, // Mencegah klik di luar pesan untuk menutup
+            allowEscapeKey: false,    // Mencegah penutupan pesan dengan tombol Escape
+        }).then(() => {
+            // Setelah pengguna menekan tombol "Oke", baru refresh halaman
+            location.reload(); // Refresh halaman setelah upload berhasil
+        });
+    }
+};
+
+// Fungsi untuk menghapus foto
+function deletePhoto(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus foto ini?')) {
+        $.ajax({
+            url: '/delete/' + id,
+            type: 'DELETE',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response.success,
+                    confirmButtonText: 'Oke',
+                    allowOutsideClick: false, // Mencegah klik di luar pesan untuk menutup
+                    allowEscapeKey: false,    // Mencegah penutupan pesan dengan tombol Escape
+                }).then(() => {
+                    location.reload(); // Refresh halaman setelah foto berhasil dihapus
                 });
             }
-        }
+        });
+    }
+};
     </script>
 </body>
 </html>
