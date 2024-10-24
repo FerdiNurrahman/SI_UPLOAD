@@ -4,7 +4,7 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\login;
 use App\Http\model\Accounts;
 
-Route::get('/login', [Login::class, 'index'])->name('login');
+Route::get('/', [Login::class, 'index'])->name('login');
 Route::post('/login', [Login::class, 'authenticate']);
 Route::post('/logout', [Login::class, 'logout'])->name('logout');
 
