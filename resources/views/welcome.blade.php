@@ -47,8 +47,11 @@
         .btn-container {
             position: absolute;
             bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
             display: none;
             z-index: 10;
         }
@@ -58,12 +61,11 @@
             background-color: rgba(0, 123, 255, 0.8);
             color: white;
             border: none;
-            padding: 5px 10px; /* Ubah padding untuk memperkecil button */
-            margin: 5px;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
-            font-size: 12px; /* Ubah ukuran font */
+            font-size: 12px;
         }
 
         .btn-container a:hover,
@@ -72,7 +74,7 @@
         }
 
         .image-card:hover .btn-container {
-            display: block;
+            display: flex;
         }
 
         .modal {
@@ -89,36 +91,34 @@
         }
 
         .modal-content {
-            width: auto;
-            max-width: 90%;
-            height: auto;
-            max-height: 90%;
+            width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-content img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            color: white;
-            font-size: 35px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1000;
+        /* Tambahkan aturan khusus untuk gambar potret (portrait) */
+        .modal-content img.portrait {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;  /* Pastikan tinggi otomatis agar gambar tidak terpotong */
+            object-fit: contain; /* Tidak memotong gambar */
         }
 
         .modal-btn-container {
             position: absolute;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
             gap: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .modal-btn-container a,
@@ -126,11 +126,11 @@
             background-color: rgba(0, 123, 255, 0.8);
             color: white;
             border: none;
-            padding: 10px 15px; /* Sesuaikan padding untuk modal button */
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
-            font-size: 14px; /* Sesuaikan ukuran font */
+            font-size: 14px;
         }
 
         .modal-btn-container a:hover,
@@ -139,11 +139,9 @@
         }
     </style>
 
-    <!-- External CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
-    <!-- External JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -178,16 +176,14 @@
         </div>
     </div>
 
-    <!-- Modal for image preview -->
+    <!-- Modal untuk pratinjau gambar -->
     <div id="photo-modal" class="modal">
-        <span class="modal-close" onclick="closeModal()">&times;</span>
         <div class="modal-content">
             <img id="modal-image" class="img-fluid" src="" alt="Preview">
         </div>
         <div class="modal-btn-container">
             <a id="modal-download" class="btn btn-primary" href="" download="">Download</a>
             <button id="modal-delete" class="btn btn-danger" onclick="">Hapus</button>
-            <button id="modal-cancel" class="btn btn-secondary" onclick="closeModal()">Batal</button> <!-- Tombol cancel -->
         </div>
     </div>
 
@@ -207,7 +203,7 @@
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                 }).then(() => {
-                    location.reload(); // Pastikan halaman reload setelah upload selesai
+                    location.reload();
                 });
             }
         };
@@ -256,24 +252,43 @@
         }
 
         function openModal(imageSrc, photoId) {
-            document.getElementById('modal-image').src = imageSrc;
+            const modal = document.getElementById('photo-modal');
+            const modalImage = document.getElementById('modal-image');
+
+            const img = new Image();
+            img.src = imageSrc;
+            img.onload = function() {
+                if (this.width > this.height) {
+                    // Landscape
+                    modalImage.classList.remove('portrait');
+                } else {
+                    // Portrait
+                    modalImage.classList.add('portrait');
+                }
+            };
+
+            modalImage.src = imageSrc;
             document.getElementById('modal-download').href = imageSrc;
             document.getElementById('modal-delete').setAttribute('onclick', `deletePhoto(${photoId})`);
-            document.getElementById('photo-modal').style.display = 'flex';
+            modal.style.display = 'flex';
 
-            // Tambahkan event listener untuk ESC
+            // Menutup modal saat klik di luar gambar
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) closeModal();
+            });
+
+            // Tambah listener untuk tombol ESC
             document.addEventListener('keydown', escKeyListener);
         }
 
         function closeModal() {
-            document.getElementById('photo-modal').style.display = 'none';
-
-            // Hapus event listener untuk ESC saat modal ditutup
-            document.removeEventListener('keydown', escKeyListener);
+            const modal = document.getElementById('photo-modal');
+            modal.style.display = 'none';
+            modal.removeEventListener('keydown', escKeyListener);
         }
 
         function escKeyListener(event) {
-            if (event.key === 'Escape') {
+            if (event.key === "Escape") {
                 closeModal();
             }
         }
