@@ -91,26 +91,19 @@
         }
 
         .modal-content {
-            width: 90vw;
-            max-height: 90vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .modal-content img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+            max-width: 100%; /* Gambar akan menyesuaikan dengan ukuran modal secara otomatis */
+            max-height: 80vh; /* Maksimal tinggi gambar adalah 80% dari tinggi layar */
+            width: auto; /* Mengatur lebar otomatis agar proporsi gambar tetap terjaga */
+            height: auto;
+            object-fit: contain; /* Pastikan gambar tidak terpotong */
         }
 
-        /* Tambahkan aturan khusus untuk gambar potret (portrait) */
-        .modal-content img.portrait {
-            max-width: 100%;
-            max-height: 100%;
-            height: auto;  /* Pastikan tinggi otomatis agar gambar tidak terpotong */
-            object-fit: contain; /* Tidak memotong gambar */
-        }
 
         .modal-btn-container {
             position: absolute;
@@ -255,19 +248,21 @@
             const modal = document.getElementById('photo-modal');
             const modalImage = document.getElementById('modal-image');
 
+            modalImage.src = imageSrc;
+
+            // Periksa apakah gambar portrait atau landscape
             const img = new Image();
             img.src = imageSrc;
-            img.onload = function() {
+            img.onload = function () {
                 if (this.width > this.height) {
                     // Landscape
-                    modalImage.classList.remove('portrait');
+                    modalImage.style.objectFit = 'contain';
                 } else {
                     // Portrait
-                    modalImage.classList.add('portrait');
+                    modalImage.style.objectFit = 'contain';
                 }
             };
 
-            modalImage.src = imageSrc;
             document.getElementById('modal-download').href = imageSrc;
             document.getElementById('modal-delete').setAttribute('onclick', `deletePhoto(${photoId})`);
             modal.style.display = 'flex';
