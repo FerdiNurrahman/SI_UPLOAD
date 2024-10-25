@@ -20,3 +20,4 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [Login::class, 'logout'])->name('logout'); // Tambah route untuk logout
 });
 
+
