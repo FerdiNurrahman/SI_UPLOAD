@@ -15,16 +15,7 @@
   <!-- Template CSS -->
   <link rel="stylesheet" href="assets/dist/assets/css/style.css">
   <link rel="stylesheet" href="assets/dist/assets/css/components.css">
-<!-- Start GA -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-94034622-3');
-</script>
-<!-- /END GA --></head>
+</head>
 
 <body>
   <div id="app">
@@ -36,23 +27,23 @@
               <div class="card-header"><h4>Login</h4></div>
 
               <div class="card-body">
-                <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate="">
+                <form method="POST" action="{{ url('/login') }}" class="needs-validation" novalidate="">
                   @csrf
                   <div class="form-group">
                       <label for="email">Email atau Username</label>
                       <input id="email" type="text" placeholder="Masukkan Email atau Username" class="form-control" name="email" tabindex="1" required autofocus>
                       <div class="invalid-feedback">
-                          Please fill in your email or username
+                          Silakan masukkan email atau username
                       </div>
                   </div>
-              
+
                   <div class="form-group">
                       <div class="d-block">
                           <label for="password" class="control-label">Password</label>
                       </div>
                       <input id="password" type="password" placeholder="Masukkan Password" class="form-control" name="password" tabindex="2" required>
                       <div class="invalid-feedback">
-                          Please fill in your password
+                          Silakan masukkan password
                       </div>
                   </div>
                   <div class="form-group">
@@ -64,10 +55,10 @@
               </div>
             </div>
             <div class="mt-5 text-muted text-center">
-              Don't have an account? I Dont Care
+              Belum punya akun? I Don't Care
             </div>
             <div class="simple-footer">
-              Copyright &copy; {{ date('Y') }}
+              Hak Cipta &copy; {{ date('Y') }}
             </div>
           </div>
         </div>
@@ -83,10 +74,6 @@
   <script src="assets/dist/assets/modules/nicescroll/jquery.nicescroll.min.js"></script>
   <script src="assets/dist/assets/modules/moment.min.js"></script>
   <script src="assets/dist/assets/js/stisla.js"></script>
-  
-  <!-- JS Libraies -->
-
-  <!-- Page Specific JS File -->
   
   <!-- Template JS File -->
   <script src="assets/dist/assets/js/scripts.js"></script>

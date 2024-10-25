@@ -90,18 +90,24 @@
             align-items: center;
         }
 
-        .modal-content {
+            .modal-content {
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px; /* Add padding for better spacing */
+            background-color: white; /* Ensure a white background */
+            border-radius: 10px; /* Round corners for a nicer look */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+            max-width: 60vw; /* Set maximum width relative to the viewport */
+            max-height: 90vh; /* Set maximum height relative to the viewport */
         }
 
-        .modal-content img {
-            max-width: 100%; /* Gambar akan menyesuaikan dengan ukuran modal secara otomatis */
-            max-height: 80vh; /* Maksimal tinggi gambar adalah 80% dari tinggi layar */
-            width: auto; /* Mengatur lebar otomatis agar proporsi gambar tetap terjaga */
-            height: auto;
-            object-fit: contain; /* Pastikan gambar tidak terpotong */
+            .modal-content img {
+            max-width: 100%; /* Ensure image scales correctly */
+            max-height: 80vh; /* Restrict height to avoid overflow */
+            width: auto; /* Allow width to adjust automatically */
+            height: auto; /* Allow height to adjust automatically */
+            object-fit: contain; /* Maintain image aspect ratio */
         }
 
 

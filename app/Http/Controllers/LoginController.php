@@ -4,24 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Account;
 
-class Login extends Controller
+class LoginController extends Controller
 {
-    // Menampilkan halaman login
+    // Menampilkan halaman login 
     public function index()
     {
         return view('login/login');
     }
 
-    // Proses autentikasi login
         public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // Jika autentikasi sukses, redirect ke halaman yang diinginkan
-            return redirect()->intended('uploadFoto');
+            // Redirect ke halaman dashboard
+            return redirect()->intended('dashboard'); // Mengarahkan ke dashboard
         }
 
         return back()->withErrors([
@@ -30,12 +28,9 @@ class Login extends Controller
     }
 
 
-    // Proses logout
-    public function logout(Request $request)
+    public function logout()
     {
         Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }

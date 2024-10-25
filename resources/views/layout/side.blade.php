@@ -11,12 +11,11 @@
   <ul class="app-menu">
     <!-- Menambahkan conditional untuk menampilkan class active pada menu yang aktif -->
     <li>
-      <a class="app-menu__item {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/') }}">
-        <i class="app-menu__icon bi bi-speedometer"></i>
-        <span class="app-menu__label">Dashboard</span>
+      <a class="app-menu__item {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ url('dashboard') }}">
+          <i class="app-menu__icon bi bi-speedometer"></i>
+          <span class="app-menu__label">Dashboard</span>
       </a>
-    </li>
-
+  </li>  
     <li>
       <a class="app-menu__item {{ Request::is('uploadFoto') ? 'active' : '' }}" href="{{ url('/uploadFoto') }}">
         <i class="app-menu__icon bi bi-ui-checks"></i>

@@ -1,23 +1,17 @@
 <?php
 
-use App\Http\Controllers\PhotoController;
-use App\Http\Controllers\login;
-use App\Http\Controllers\coba;
-use App\Http\model\Accounts;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AdminController;
 
-Route::get('/', [coba::class, 'index']);
+// Route untuk login dan autentikasi
+Route::get('/', [LoginController::class, 'index'])->name('login'); // Halaman login
+Route::post('/login', [LoginController::class, 'authenticate']); // Proses autentikasi
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-
-Route::get('/login', [Login::class, 'index'])->name('login');
-Route::post('/login', [Login::class, 'authenticate']);
-Route::post('/logout', [Login::class, 'logout'])->name('logout');
-
-
+// Route yang memerlukan autentikasi
 Route::middleware(['auth'])->group(function () {
-    Route::get('/uploadFoto', [PhotoController::class, 'index']);
-    Route::post('/upload', [PhotoController::class, 'store']);
-    Route::delete('/delete/{id}', [PhotoController::class, 'destroy']);
-    Route::post('/logout', [Login::class, 'logout'])->name('logout'); // Tambah route untuk logout
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/uploadFoto', [AdminController::class, 'TampilFoto']);
+    Route::post('/upload', [AdminController::class, 'store']);
+    Route::delete('/delete/{id}', [AdminController::class, 'destroy']);
 });
-
-
