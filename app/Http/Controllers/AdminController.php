@@ -44,16 +44,23 @@ class AdminController extends Controller
         ]);
 
         $files = $request->file('file');
-        $photoCount = Photo::count();
+        $userId = auth()->id(); // Dapatkan ID pengguna yang sedang login
 
-        foreach ($files as $index => $file) {
-            $imageName = 'foto_' . ($photoCount + $index + 1) . '.' . $file->getClientOriginalExtension();
+        foreach ($files as $file) {
+            // Ambil nama asli file tanpa ekstensi
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            // Ambil ekstensi file
+            $extension = $file->getClientOriginalExtension();
+            // Format nama file menjadi "id.nama.ext"
+            $imageName = $userId . '.' . $originalName . '.' . $extension;
+
+            // Simpan file di direktori 'public/foto'
             $file->move(public_path('foto'), $imageName);
 
-            // Simpan nama foto dan ID akun ke database
+            // Simpan nama file dan ID akun ke database
             Photo::create([
                 'name' => $imageName,
-                'account_id' => auth()->id(), // Menyimpan ID pengguna yang sedang login
+                'account_id' => $userId, // Menyimpan ID pengguna yang sedang login
             ]);
         }
 
