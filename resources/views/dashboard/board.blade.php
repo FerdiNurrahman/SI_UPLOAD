@@ -1,5 +1,6 @@
 @extends('layout.main')
-
+@section('content')
+    
 <main class="app-content">
   <div class="app-title">
     <div>
@@ -62,3 +63,5 @@
   </div>
 </div>
 </main>
+
+@endsection
