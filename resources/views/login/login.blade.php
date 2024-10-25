@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="assets/dist/assets/modules/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/dist/assets/modules/fontawesome/css/all.min.css">
 
+  <!-- SweetAlert CSS (No installation required) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="assets/dist/assets/modules/bootstrap-social/bootstrap-social.css">
 
@@ -75,8 +78,24 @@
   <script src="assets/dist/assets/modules/moment.min.js"></script>
   <script src="assets/dist/assets/js/stisla.js"></script>
   
+  <!-- SweetAlert JS (No installation required) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+  
   <!-- Template JS File -->
   <script src="assets/dist/assets/js/scripts.js"></script>
   <script src="assets/dist/assets/js/custom.js"></script>
+
+  <!-- SweetAlert Notification Logic -->
+  @if(session('success'))
+    <script>
+        swal("Success!", "{{ session('success') }}", "success");
+    </script>
+  @endif
+
+  @if(session('error'))
+    <script>
+        swal("Error!", "{{ session('error') }}", "error");
+    </script>
+  @endif
 </body>
 </html>

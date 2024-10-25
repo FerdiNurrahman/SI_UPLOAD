@@ -13,24 +13,27 @@ class LoginController extends Controller
         return view('login/login');
     }
 
-        public function authenticate(Request $request)
+    // Authenticate user
+    public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // Redirect ke halaman dashboard
-            return redirect()->intended('dashboard'); // Mengarahkan ke dashboard
+            // Set success message and redirect to dashboard
+            $userName = Auth::user()->name; // Assuming the name field is stored in the `accounts` table
+
+            // Set success message with the user's name
+            return redirect()->intended('dashboard')->with('success', "Selamat Datang $userName!");
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        // Set error message and return to login
+        return back()->with('error', 'Username atau password salah.');
     }
 
-
+    // Logout user
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Anda telah berhasil logout.');
     }
 }
