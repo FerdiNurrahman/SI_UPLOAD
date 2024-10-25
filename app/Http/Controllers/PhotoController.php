@@ -13,8 +13,11 @@ class PhotoController extends Controller
     {
         $account_id = auth()->id();
         $photos = Photo::where('account_id', $account_id)->get(); // Tampilkan foto milik akun yang sedang login
+      
+    
         return view('welcome', compact('photos'));
     }
+    
     
 
 

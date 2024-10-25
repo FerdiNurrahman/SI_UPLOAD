@@ -28,6 +28,12 @@ class AccountSeeder extends Seeder
                 'name' => 'Alifa Nur Nabila',
                 'password' => Hash::make('alifa123'), // Password terenkripsi
             ],
+            [
+                'username' => 'Ku',
+                'email' => 'ku@gmail.com',
+                'name' => 'ku',
+                'password' => Hash::make('ku12345'), // Password terenkripsi
+            ],
         ]);
     }
 }
