@@ -23,7 +23,7 @@ class AdminController extends Controller
         $userTotals = $uploadsByUser->pluck('total')->toArray(); // Ambil total upload dari pengguna
 
         $totalPhotos = Photo::count(); // Menghitung total foto yang ada di database
-        return view('admin.board', compact('totalPhotos', 'userNames', 'userTotals')); // Pastikan ini sesuai dengan nama tampilan
+        return view('admin.content', compact('totalPhotos', 'userNames', 'userTotals')); // Pastikan ini sesuai dengan nama tampilan
     }
 
     public function TampilFoto()
