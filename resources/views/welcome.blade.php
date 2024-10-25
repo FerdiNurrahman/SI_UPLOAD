@@ -1,28 +1,12 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layout.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Upload Foto</title>
-
-    <!-- CSS Eksternal -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-
-    <!-- JavaScript Eksternal -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+@section('content')
+<main class="app-content">
+    <div class="app-title">
+        <h1><i class="fa fa-cloud-upload"></i> Upload Foto</h1>
+        <p>Upload foto dan kelola foto yang telah diupload</p>
+    </div>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-
         .dropzone {
             margin-bottom: 20px;
             border: 2px dashed #0087F7;
@@ -40,10 +24,10 @@
 
         .image-card {
             position: relative;
-            width: 300px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             overflow: hidden;
-            border-radius: 15px;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -51,7 +35,7 @@
         .image-card img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             background-color: #f0f0f0;
         }
 
@@ -62,7 +46,7 @@
 
         .btn-container {
             position: absolute;
-            bottom: 15px;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
@@ -74,12 +58,12 @@
             background-color: rgba(0, 123, 255, 0.8);
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 5px 10px; /* Ubah padding untuk memperkecil button */
             margin: 5px;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 12px; /* Ubah ukuran font */
         }
 
         .btn-container a:hover,
@@ -100,33 +84,32 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            height: 90%;
-            max-width: 1000px;
-            max-height: 100%;
+            width: auto;
+            max-width: 90%;
+            height: auto;
+            max-height: 90%;
         }
 
         .modal-content img {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            height: auto;
+            object-fit: cover;
         }
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 40px;
+            top: 10px;
+            right: 20px;
             color: white;
             font-size: 35px;
             font-weight: bold;
             cursor: pointer;
+            z-index: 1000;
         }
 
         .modal-btn-container {
@@ -143,11 +126,11 @@
             background-color: rgba(0, 123, 255, 0.8);
             color: white;
             border: none;
-            padding: 15px 20px;
+            padding: 10px 15px; /* Sesuaikan padding untuk modal button */
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 14px; /* Sesuaikan ukuran font */
         }
 
         .modal-btn-container a:hover,
@@ -155,68 +138,60 @@
             background-color: rgba(0, 123, 255, 1);
         }
     </style>
-</head>
 
-<body>
-    <form action="{{ route('logout') }}" method="POST" style="text-align: right;">
-        @csrf
-        <button type="submit" style="background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-            Logout
-        </button>
-    </form>
-    
-    <h1>Upload Foto</h1>
-    <form action="/upload" class="dropzone" id="photo-dropzone" method="POST" enctype="multipart/form-data">
-        @csrf
-    </form>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
-    <h2>Foto yang diupload</h2>
-    <div class="gallery">
-        @foreach ($photos as $photo)
-        <div class="image-card" ondblclick="openModal('{{ asset('foto/' . $photo->name) }}', '{{ $photo->id }}')">
-            <img src="{{ asset('foto/' . $photo->name) }}" alt="foto">
-            <div class="btn-container">
-                <a href="{{ asset('foto/' . $photo->name) }}" download="{{ $photo->name }}">Download</a>
-                <button onclick="deletePhoto('{{ $photo->id }}')">Hapus</button>
+    <!-- External JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <h3 class="tile-title">Upload Foto</h3>
+                <form action="/upload" class="dropzone" id="photo-dropzone" method="POST" enctype="multipart/form-data">
+                    @csrf
+                </form>
             </div>
         </div>
-        @endforeach
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <h3 class="tile-title">Foto yang diupload</h3>
+                <div class="gallery d-flex flex-wrap">
+                    @foreach ($photos as $photo)
+                    <div class="image-card mb-4" ondblclick="openModal('{{ asset('foto/' . $photo->name) }}', '{{ $photo->id }}')">
+                        <img src="{{ asset('foto/' . $photo->name) }}" class="img-fluid" alt="foto">
+                        <div class="btn-container">
+                            <a href="{{ asset('foto/' . $photo->name) }}" class="btn btn-primary btn-sm" download="{{ $photo->name }}">Download</a>
+                            <button class="btn btn-danger btn-sm" onclick="deletePhoto('{{ $photo->id }}')">Hapus</button>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for image preview -->
     <div id="photo-modal" class="modal">
         <span class="modal-close" onclick="closeModal()">&times;</span>
         <div class="modal-content">
-            <img id="modal-image" src="" alt="Preview">
+            <img id="modal-image" class="img-fluid" src="" alt="Preview">
         </div>
         <div class="modal-btn-container">
-            <a id="modal-download" href="" download="">Download</a>
-            <button id="modal-delete" onclick="">Hapus</button>
+            <a id="modal-download" class="btn btn-primary" href="" download="">Download</a>
+            <button id="modal-delete" class="btn btn-danger" onclick="">Hapus</button>
+            <button id="modal-cancel" class="btn btn-secondary" onclick="closeModal()">Batal</button> <!-- Tombol cancel -->
         </div>
     </div>
 
     <script>
-        function showSuccessMessage(message) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: message,
-                confirmButtonText: 'Oke',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-            });
-        }
-
-        function showErrorMessage(message) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: message,
-                confirmButtonText: 'Oke',
-                timer: 3000,
-                timerProgressBar: true
-            });
-        }
-
         Dropzone.options.photoDropzone = {
             paramName: "file",
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
@@ -232,7 +207,7 @@
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                 }).then(() => {
-                    location.reload();
+                    location.reload(); // Pastikan halaman reload setelah upload selesai
                 });
             }
         };
@@ -284,14 +259,24 @@
             document.getElementById('modal-image').src = imageSrc;
             document.getElementById('modal-download').href = imageSrc;
             document.getElementById('modal-delete').setAttribute('onclick', `deletePhoto(${photoId})`);
-            document.getElementById('photo-modal').style.display = 'block';
+            document.getElementById('photo-modal').style.display = 'flex';
+
+            // Tambahkan event listener untuk ESC
+            document.addEventListener('keydown', escKeyListener);
         }
 
         function closeModal() {
             document.getElementById('photo-modal').style.display = 'none';
+
+            // Hapus event listener untuk ESC saat modal ditutup
+            document.removeEventListener('keydown', escKeyListener);
+        }
+
+        function escKeyListener(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
         }
     </script>
-</body>
-
-</html>
- 
+</main>
+@endsection
