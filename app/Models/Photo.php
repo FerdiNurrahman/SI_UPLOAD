@@ -10,7 +10,7 @@ class Photo extends Model
     use HasFactory;
 
     // Field yang bisa diisi secara massal
-    protected $fillable = ['name', 'account_id'];
+    protected $fillable = ['name', 'account_id', 'category'];
 
     // Relasi ke model Account
     public function account()
